@@ -3,19 +3,15 @@ var app = new Vue({
   data: {
     title: "",
     description: "",
-    file: null,
+    path: "",
     items: [],
     addItem: null,
     findTitle: "",
     findItem: null,
   },
-  computed: {
-    suggestions() {
-      return this.items.filter(item => item.title.toLowerCase().startsWith(this.findTitle.toLowerCase()));
-    }
-  },
   created() {
     this.getItems();
+    console.log("Number of items: " + this.items.length);
   },
   methods: {
     fileChanged(event) {
@@ -23,15 +19,12 @@ var app = new Vue({
     },
     async upload() {
       try {
-        const formData = new FormData();
-        formData.append('photo', this.file, this.file.name)
-        let r1 = await axios.post('/api/photos', formData);
-        let r2 = await axios.post('/api/items', {
+        let r1 = await axios.post('/api/items', {
           title: this.title,
           description: this.description,
-          path: r1.data.path
+          path: this.path,
         });
-        this.addItem = r2.data;
+        this.addItem = r1.data;
         this.getItems();
       }
       catch (error) {
@@ -42,6 +35,7 @@ var app = new Vue({
       try {
         let response = await axios.get("/api/items");
         this.items = response.data;
+        this.sortItems();
         return true;
       }
       catch (error) {
@@ -77,5 +71,17 @@ var app = new Vue({
         console.log(error);
       }
     },
+    sortItems() {
+      console.log("sort items")
+      console.log(this.items);
+      this.items.sort(function(a, b) {
+        var x = a.title.toLowerCase();
+        var y = b.title.toLowerCase();
+        if (x < y) { return -1; }
+        if (x > y) { return 1; }
+        console.log(this.items);
+        return 0;
+      });
+    }
   }
 });

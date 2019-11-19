@@ -30,23 +30,11 @@ const itemSchema = new mongoose.Schema({
   title: String,
   description: String,
   path: String,
+  orders: { type: Number, default: 0 }
 });
 
 // Create a model for items in the museum.
 const Item = mongoose.model('Item', itemSchema);
-
-// Upload a photo. Uses the multer middleware for the upload and then returns
-// the path where the photo is stored in the file system.
-app.post('/api/photos', upload.single('photo'), async(req, res) => {
-  // Just a safety check
-  if (!req.file) {
-    return res.sendStatus(400);
-  }
-  console.log("Post photo " + req.file.filename);
-  res.send({
-    path: "/images/" + req.file.filename
-  });
-});
 
 // Create a new item in the store: takes a title and a path to an image.
 app.post('/api/items', async(req, res) => {
@@ -88,11 +76,11 @@ app.delete('/api/items/:id', async (req, res) => {
   }
 });
 
+//Increment orders count
 app.put('/api/items/:id', async (req, res) => {
   try {
     let item = await Item.findOne({_id:req.params.id});
-    item.title = req.body.title;
-    item.description = req.body.description;
+    item.orders += 1;
     item.save();
     res.send(item);
   }

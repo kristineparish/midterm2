@@ -4,29 +4,42 @@
 <head>
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
-  <title>Museum of Ordinary Objects</title>
+  <title>Store</title>
 </head>
 
 <body>
-  <div class="header">
-    <div class="logo">
-      <img src="images/ordinary.png">
-    </div>
-    <div class="title">
-      <h2>CS 260</h2>
-      <h1>Museum of Ordinary Objects</h1>
-    </div>
-  </div>
   <div id="app" class="content">
-    <section class="image-gallery">
-      <div class="image" v-for="item in items">
-        <h2>{{item.title}} - {{item.description}}</h2>
-        <img :src="item.path" />
+    <h1>Shopping Interface</h1>
+    <h1>Current Products</h1>
+    <form v-on:submit.prevent="submitCart">
+      <div v-for="item in items">
+        <p></p>
+        <hr>
+        <input type="checkbox" v-model="item.chosen" @click="chooseItem(item)" />
+        <div class="column">
+          {{item.title}} - price {{item.description}}
+        </div>
+        <div class="column">
+          <img :src="item.path" />
+        </div>
       </div>
+      <br>
+      <button type="submit">Submit Purchase</button>
+    </form>
+    <br>
+    <h1>Shopping Cart</h1>
+    <div v-if="submittedCart.length == 0">
+      Shopping Cart is empty!
+    </div>
+    <div v-for="item in submittedCart">
+      <h2>{{item.title}} - price {{item.description}}</h2>
+      <img :src="item.path" />
+    </div>
+
   </div>
   <div class="footer">
     <a href="admin.html">Admin</a>
-    <a href="https://github.com/BYUCS260/lab-5-mongodb-kristineparish">GitHub Repo</a>
+    <a href="https://github.com/kristineparish/midterm2">GitHub Repo</a>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.7/vue.js" integrity="sha256-g+Q8DFAmG5+eyRPSydX0LY4TfjsL11XSDrIGerbbEdA=" crossorigin="anonymous"></script>
